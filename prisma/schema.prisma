@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  admin
+  owner
+}
+
+enum CompanyStatus {
+  pending
+  approved
+  rejected
+}
+
+enum Representation {
+  EU
+  UK
+  EU_UK
+}
+
+enum SubscriptionStatus {
+  inactive
+  trialing
+  active
+  cancelled
+  past_due
+}
+
+enum DsarStatus {
+  open
+  in_progress
+  in_review
+  closed
+}
+
+model User {
+  id        String @id @default(cuid())
+  email     String @unique
+  password  String
+  role      UserRole
+  companies Company[]
+  createdAt DateTime @default(now())
+}
+
+
+model Company {
+  id        String @id @default(cuid())
+  ownerId   String
+  owner     User @relation(fields: [ownerId],references: [id])
+  name      String
+  logoUrl   String?
+  address   String
+  email     String
+  phone     String
+  employeesCount  Int
+  field     String
+  representation  Representation
+  status  CompanyStatus @default(pending)
+  slug  String? @unique
+
+  stripeCustomerId      String?
+  stripeSubscriptionId  String?
+  subscriptionStatus  SubscriptionStatus @default(inactive)
+
+  dsarRequests  DsarRequest[]
+  createdAt DateTime @default(now())
+}
+
+model DsarRequest {
+  id        String @id @default(cuid())
+  companyId String
+  company Company @relation(fields: [companyId], references: [id])
+
+  requesterName String
+  requesterEmail String
+  requesterPhone String
+  requestText String
+  status DsarStatus @default(open)
+
+  createdAt DateTime @default(now())
+}
