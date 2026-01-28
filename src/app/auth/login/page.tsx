@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { loginAction } from '@/app/action/auth.action';
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -16,17 +17,14 @@ export default function LoginPage() {
     const handleSubmit = async()=>{
         setError('');
         try {
-            const res = await fetch('/ap/auth/login',{
-                method:"POST",
-                body:JSON.stringify({email, password}),
-            });
+            const res = await loginAction(email, password);
 
-            if(!res.ok){
-                setError("Invalid Credentials");
+            if (res instanceof Error) {
+                setError(res.message);
                 return;
             }
-
-            const {role} = await res.json();
+            
+            const { role } = res;
             router.push(role === 'admin' ? "/admin" : '/owner')
 
         } catch (error) {
