@@ -5,19 +5,20 @@ import { prisma } from "../../../prisma/seed"
 import { stripe } from "@/lib/stripe";
 
 
-export async function createCheckoutSession() {
+export async function createCheckoutSession(companyId:string) {
 
     try {
-            const session = (await cookies()).get('session')?.value;
-    if(!session) throw new Error("Unauthorized");
+        const session = (await cookies()).get('session')?.value;
+        if(!session) throw new Error("Unauthorized");
 
-    const {id:ownerId} = JSON.parse(session);
+        const {id:ownerId} = JSON.parse(session);
 
-    const company = await prisma.company.findFirst({
-        where:{
-            ownerId
-        }
-    });
+        const company = await prisma.company.findFirst({
+            where: {
+                id: companyId,
+                ownerId,
+            },
+        });
 
     if(!company) throw new Error("Company not found");
 
@@ -30,9 +31,7 @@ export async function createCheckoutSession() {
         }],
         success_url: `${process.env.NEXT_PUBLIC_APP_URL}/owner?success=1`,
         cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/owner?canceled=1`,
-        metadata: {
-            companyId: company.id,
-        },
+        metadata: { companyId },
     });
 
     return checkoutSession.url

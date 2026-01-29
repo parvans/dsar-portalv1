@@ -9,10 +9,19 @@ import { submitDsarAction } from "@/app/action/dsar.actions"
 
 export function DsarForm({ companyId }: { companyId: string }) {
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null);
 
   async function action(formData: FormData) {
-    await submitDsarAction(formData)
-    setSubmitted(true)
+    setError(null);
+    try {
+      await submitDsarAction(formData)
+      setSubmitted(true)
+      setTimeout(() => {
+        setSubmitted(false)
+      }, 5000);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "Something went wrong");
+    }
   }
 
   if (submitted) {
@@ -59,6 +68,10 @@ export function DsarForm({ companyId }: { companyId: string }) {
             placeholder="Request details"
             required
           />
+
+          {error && (
+            <p className="text-sm text-red-500">{error}</p>
+          )}
 
           <Button className="w-full">
             Submit Request

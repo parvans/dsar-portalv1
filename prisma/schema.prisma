@@ -89,4 +89,6 @@ model DsarRequest {
   status DsarStatus @default(open)
 
   createdAt DateTime @default(now())
+
+  @@index([companyId, createdAt])
 }

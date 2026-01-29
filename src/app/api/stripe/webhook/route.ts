@@ -1,6 +1,8 @@
 import { NextRequest } from "next/server";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
+import {prisma} from "@/lib/prisma";
+
 
 export const POST = async(req:NextRequest)=>{
     const body = await req.text();
@@ -19,7 +21,9 @@ export const POST = async(req:NextRequest)=>{
     }
 
     if(event.type === "checkout.session.completed"){
+        console.log("🔥 Webhook received:", event.type)
         const session = event.data.object as Stripe.Checkout.Session;
+        console.log("📦 Metadata:", session.metadata)
 
         const companyId = session.metadata?.companyId;
 
