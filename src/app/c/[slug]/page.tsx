@@ -6,12 +6,13 @@ import { prisma } from "@/lib/prisma"
 
 
 type PageProps = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export default async function PublicCompanyPage({ params }: PageProps) {
+  const { slug } = await params
   const company = await prisma.company.findFirst({
-    where: { slug: params.slug },
+    where: { slug:slug },
   })
 
   if (!company) return notFound()

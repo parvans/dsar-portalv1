@@ -53,7 +53,7 @@ export default async function OwnerDashboard() {
           <p>Employees: {company.employeesCount}</p>
           <p>Representation: {company.representation}</p>
           <p>
-            Subscription:{" "}
+            Subscription:{" "}  
             <b className="capitalize">{company.subscriptionStatus}</b>
           </p>
         </CardContent>
