@@ -1,8 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const session = (await cookies()).get("session")?.value
+
+  if (session) {
+    const { role } = JSON.parse(session)
+
+    if (role === "admin") redirect("/admin")
+    if (role === "owner") redirect("/owner")
+  }
   return (
     <div className="min-h-screen flex items-center justify-center bg-muted px-4">
       <Card className="w-full max-w-md">
