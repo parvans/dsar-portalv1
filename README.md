@@ -115,6 +115,8 @@ DSAR form is active only when subscription is active.
 * Public DSAR form is rate-limited
 * Email notifications are logged to console
 * Stripe runs in test mode
+* Admin - email: admin@dsar.com, password: admin@123
+* Owner - email: owner@dsar.com, password: owner@123
 
 ---
 
