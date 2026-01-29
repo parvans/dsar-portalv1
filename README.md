@@ -1,9 +1,4 @@
-Got it 👍 — here’s a **very minimal, clean README** that reviewers love for machine tests.
-No fluff, only **setup + run + test**.
-
-You can **copy-paste this as your README.md**.
-
----
+https://dsar-portalv1.vercel.app/
 
 # **DSAR Portal – Setup**
 
