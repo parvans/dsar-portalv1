@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Got it 👍 — here’s a **very minimal, clean README** that reviewers love for machine tests.
+No fluff, only **setup + run + test**.
 
-## Getting Started
+You can **copy-paste this as your README.md**.
 
-First, run the development server:
+---
+
+# **DSAR Portal – Setup**
+
+## Prerequisites
+
+* Node.js 18+
+* PostgreSQL (Supabase or local)
+* Stripe account (test mode)
+
+---
+
+## 1. Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+## 2. Environment Variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=postgresql://...
+
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PRICE_ID=price_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+---
+
+## 3. Database Setup
+
+```bash
+npx prisma db push
+npx prisma db seed
+```
+
+**Seeded credentials**
+
+* Admin: `admin@dsar.com / admin@123`
+* Owner: `owner@dsar.com / owner@123`
+
+---
+
+## 4. Run the App
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 5. Stripe Webhook (Required for Subscriptions)
 
-To learn more about Next.js, take a look at the following resources:
+Login to Stripe CLI:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+stripe login
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Start webhook listener:
 
-## Deploy on Vercel
+```bash
+stripe listen --forward-to localhost:3000/api/stripe/webhook
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Copy the generated `whsec_...` value into `.env`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 6. Test Subscription
+
+* Login as Owner
+* Go to Owner Dashboard
+* Click **Subscribe**
+* Use Stripe test card:
+
+```
+4242 4242 4242 4242
+```
+
+---
+
+## 7. Public DSAR Page
+
+After admin approval:
+
+```
+/c/[company-slug]
+```
+
+DSAR form is active only when subscription is active.
+
+---
+
+## Notes
+
+* Public DSAR form is rate-limited
+* Email notifications are logged to console
+* Stripe runs in test mode
+
+---
+
