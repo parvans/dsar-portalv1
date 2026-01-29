@@ -17,7 +17,7 @@ export default function Home() {
           <div className="flex flex-col. gap-3">
             <Link href="/auth/login">
               <Button className="w-full">
-                Company Owner Login
+                Company Owner Login 
               </Button>
             </Link>
 
