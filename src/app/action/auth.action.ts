@@ -3,6 +3,7 @@
 import bcrypt from "bcrypt"
 import { cookies } from "next/headers"
 import { prisma } from "../../../prisma/seed"
+import { redirect } from "next/navigation"
 
 export async function loginAction(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } })
@@ -18,6 +19,18 @@ export async function loginAction(email: string, password: string) {
   )
 
   return { role: user.role }
+}
+
+export async function logoutAction() {
+  const cookieStore = await cookies()
+
+  cookieStore.set("session", "", {
+    httpOnly: true,
+    expires: new Date(0),
+    path: "/",
+  })
+
+  redirect("/auth/login")
 }
 
 

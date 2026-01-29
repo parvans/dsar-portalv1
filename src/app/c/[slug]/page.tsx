@@ -1,15 +1,16 @@
 import { notFound } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { prisma } from "../../../../prisma/seed"
 import { DsarForm } from "@/components/public/dsar-form"
+import { prisma } from "@/lib/prisma"
+
 
 type PageProps = {
   params: { slug: string }
 }
 
 export default async function PublicCompanyPage({ params }: PageProps) {
-  const company = await prisma.company.findUnique({
+  const company = await prisma.company.findFirst({
     where: { slug: params.slug },
   })
 

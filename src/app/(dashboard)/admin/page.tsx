@@ -1,6 +1,8 @@
 import { DsarAdminTable } from "@/components/admin/dsar-table"
 import { prisma } from "../../../../prisma/seed"
 import { PendingCompaniesTable } from "@/components/admin/pending-companies-table"
+import { Button } from "@/components/ui/button"
+import { logoutAction } from "@/app/action/auth.action"
 
 export default async function AdminPage() {
   const pendingCompanies = await prisma.company.findMany({
@@ -19,7 +21,14 @@ export default async function AdminPage() {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-10">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+      <div className="flex items-start justify-between">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <Button className="hover:bg-red-400"
+        variant={"secondary"} 
+        onClick={logoutAction}>
+          Logout
+        </Button>
+      </div>
 
       {/* Pending Companies */}
       <section>

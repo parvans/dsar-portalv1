@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge"
 import { DsarOwnerTable } from "@/components/owner/dsar-owner-table"
 import { prisma } from "../../../../prisma/seed"
 import { CompanyRegistrationForm } from "@/components/owner/company-registration-form"
+import { logoutAction } from "@/app/action/auth.action"
+import { Button } from "@/components/ui/button"
 
 export default async function OwnerDashboard() {
   const session = JSON.parse((await cookies()).get("session")!.value)
@@ -29,13 +31,22 @@ export default async function OwnerDashboard() {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold">Owner Dashboard</h1>
+     <div className="flex items-start justify-between">
+        <h1 className="text-3xl font-bold">Owner Dashboard</h1>
+        <Button className="hover:bg-red-400"
+        variant={"secondary"} 
+        onClick={logoutAction}>
+          Logout
+        </Button>
+      </div>
 
       {/* Company Info */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>{company.name}</CardTitle>
-          <Badge variant="outline">{company.status}</Badge>
+          <Badge variant={company.status === "approved" ? "default" : "destructive"}>
+            {company.status}
+          </Badge>
         </CardHeader>
         <CardContent className="space-y-1 text-sm">
           <p>Field: {company.field}</p>
